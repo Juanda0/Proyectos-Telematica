@@ -10,14 +10,6 @@ from datetime import date, datetime
 
 print_lock = threading.Lock()
 # Connect to the Reverse Proxy
-def rpConnection(rpSocket):
-    global ID,PORT
-    jsonMsg = {"type":"1", "id": ID, "listenport": PORT}
-    t = f"Connetion with reverse proxy\n"
-    log(t,file)
-    
-    rpSocket.send(json.dumps(jsonMsg).encode())
-
 # after receiving each connection from reverse proxy/client
 def newClient(clientsocket,addr):
     global ID
@@ -27,23 +19,14 @@ def newClient(clientsocket,addr):
             print_lock.release()
             break
 
-        jsonMsg = json.loads(msg.decode())
-        if jsonMsg["type"] == "1":
-            rpConnection(clientsocket)
-        else:
-            t = f"Received a message from client {jsonMsg['srcid']} payload {jsonMsg['payload']}"
-            log(t,file)
+        t = f"Sending a message to the client"
+        log(t,file)
+        res = """HTTP/1.1 200 OK
+                Content-Type: text/html
 
-            payload = jsonMsg["payload"]
-            newMsg = hashlib.sha1()
-            newMsg.update(payload.encode())
-            hashedPayload = newMsg.hexdigest()
-            newJsonMsg = {"type":"2", "srcid": ID, "destid": jsonMsg["srcid"],"payloadsize": len(hashedPayload), "payload": hashedPayload}
-            
-            t = f"Sending a message to the client {newJsonMsg['destid']} payload {newJsonMsg['payload']}"
-            log(t,file)
-
-            clientsocket.send(json.dumps(newJsonMsg).encode())
+                <html><body>PONG - Server ID:"""+str(ID)+"""</body></html>
+            """
+        clientsocket.send(bytes(res, 'utf-8'))
     clientsocket.close()
 
 if __name__ == "__main__":
