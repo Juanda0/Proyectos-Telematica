@@ -21,10 +21,23 @@ def roundRobin():
 def newClient(clientsocket,addr):
     while True:
         msg = clientsocket.recv(2048)
+
+        cache = json.load("cache.json")
         if not msg:
             printLock.release()
-            break        
+            break  
 
+        #Caching strategy
+        if msg in cache.keys():
+            #Calculates diference between saved datetime and current time in seconds, and then sustracts the parameter TTL
+            TTLLeft = (datetime.now() - datetime.strptime(cache[msg]["TTL"], '%d-%m-%Y-%H-%M-%S')).total_seconds() - config.TTL 
+            if TTLLeft > 0:
+                t = f"Forwarding data message from cache. Resource's TTL left: {TTLLeft} \n"
+                log(t,file)
+                clientsocket.send(cache[msg]["response"])
+                break
+        
+        
         t = f"Received a message from client {addr}\n"
         log(t,file)
             
@@ -43,7 +56,12 @@ def newClient(clientsocket,addr):
 
         t = f"Received a data message from server id {targetHost[0]}\n"
         log(t,file)
-            
+
+        #save the cache
+        cache[msg] = {"response":recvMsg,"TTL":datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}
+        with open('cache.json', 'w') as f:
+            json.dump(cache, f)
+        
         server_socket.close()
         
         clientsocket.send(recvMsg)
