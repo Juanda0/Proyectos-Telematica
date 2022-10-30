@@ -21,20 +21,21 @@ def roundRobin():
 def newClient(clientsocket,addr):
     while True:
         msg = clientsocket.recv(2048)
-
-        cache = json.load("cache.json")
+        msgD = msg.decode()
+        with open("cache.json", 'r') as f:
+            cache = json.load(f)
         if not msg:
             printLock.release()
             break  
 
         #Caching strategy
-        if msg in cache.keys():
+        if msgD in cache.keys():
             #Calculates diference between saved datetime and current time in seconds, and then sustracts the parameter TTL
-            TTLLeft = (datetime.now() - datetime.strptime(cache[msg]["TTL"], '%d-%m-%Y-%H-%M-%S')).total_seconds() - config.TTL 
+            TTLLeft = config.TTL - (datetime.now() - datetime.strptime(cache[msgD]["TTL"], '%d-%m-%Y-%H-%M-%S')).total_seconds() 
             if TTLLeft > 0:
                 t = f"Forwarding data message from cache. Resource's TTL left: {TTLLeft} \n"
                 log(t,file)
-                clientsocket.send(cache[msg]["response"])
+                clientsocket.send(cache[msgD]["response"].encode())
                 break
         
         
@@ -58,8 +59,8 @@ def newClient(clientsocket,addr):
         log(t,file)
 
         #save the cache
-        cache[msg] = {"response":recvMsg,"TTL":datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}
-        with open('cache.json', 'w') as f:
+        cache[msgD] = {"response":recvMsg.decode(),"TTL":datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}
+        with open("cache.json", 'w') as f:
             json.dump(cache, f)
         
         server_socket.close()
