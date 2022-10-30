@@ -22,6 +22,7 @@ def newClient(clientsocket,addr):
     while True:
         msg = clientsocket.recv(2048)
         msgD = msg.decode()
+        log(msgD,file)
         with open("cache.json", 'r') as f:
             cache = json.load(f)
         if not msg:
@@ -35,8 +36,10 @@ def newClient(clientsocket,addr):
             if TTLLeft > 0:
                 t = f"Forwarding data message from cache. Resource's TTL left: {TTLLeft} \n"
                 log(t,file)
-                clientsocket.send(cache[msgD]["response"].encode())
-                break
+                response = cache[msgD]["response"]
+                log(response,file)
+                clientsocket.send(response.encode())
+                continue
         
         
         t = f"Received a message from client {addr}\n"
@@ -60,6 +63,7 @@ def newClient(clientsocket,addr):
 
         #save the cache
         cache[msgD] = {"response":recvMsg.decode(),"TTL":datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}
+        log(recvMsg.decode(),file)
         with open("cache.json", 'w') as f:
             json.dump(cache, f)
         
