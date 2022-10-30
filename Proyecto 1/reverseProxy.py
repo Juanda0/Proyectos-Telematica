@@ -62,8 +62,10 @@ if __name__ == "__main__":
 
     s.bind((config.RPHOST, config.RPPORT))     
     s.listen(100)
-    while True:
-        c, addr = s.accept()
-        printLock.acquire()
-        _thread.start_new_thread(newClient,(c,addr))
-    s.close()
+    try:
+        while True:
+            c, addr = s.accept()
+            printLock.acquire()
+            _thread.start_new_thread(newClient,(c,addr))
+    except:
+        s.close()
