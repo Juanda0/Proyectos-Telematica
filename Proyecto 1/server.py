@@ -1,12 +1,9 @@
 import socket
 import _thread
 import threading
-import hashlib
-import json
-import sys
 import config
 from utils import log
-from datetime import date, datetime
+from datetime import datetime
 
 print_lock = threading.Lock()
 # Connect to the Reverse Proxy
@@ -34,9 +31,9 @@ if __name__ == "__main__":
     global file,ID,HOST,PORT
     file = f"logs/S-{datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}"
 
-    ID = config.SERVERS[2][0]
-    HOST = config.SERVERS[2][1]
-    PORT = config.SERVERS[2][2]
+    ID = config.ID+1
+    HOST = config.SERVERS[config.ID][1]
+    PORT = config.SERVERS[config.ID][2]
     
     t = f"Server running with id {ID}\n"
     log(t,file)
@@ -44,17 +41,14 @@ if __name__ == "__main__":
     t = f"Listening on port {PORT}\n"
     log(t,file)
 
-    # rpConnection()
-    # t = f"Connecting to the reverse proxy on port {config.RPPORT}\n"
-    # log(t,file)
-
+    
     s.bind((HOST, PORT))     
     s.listen(10)                 
 
     while True:
         c, addr = s.accept()
         print_lock.acquire()
-        t = f"Received a message from client {addr} payload\n"
+        t = f"Received a message from client {addr}\n"
         log(t,file)
         _thread.start_new_thread(newClient,(c,addr))
         
