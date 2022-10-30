@@ -45,11 +45,12 @@ if __name__ == "__main__":
     s.bind((HOST, PORT))     
     s.listen(10)                 
 
-    while True:
-        c, addr = s.accept()
-        print_lock.acquire()
-        t = f"Received a message from client {addr}\n"
-        log(t,file)
-        _thread.start_new_thread(newClient,(c,addr))
-        
-    s.close()
+    try:
+        while True:
+            c, addr = s.accept()
+            print_lock.acquire()
+            t = f"Received a message from client {addr}\n"
+            log(t,file)
+            _thread.start_new_thread(newClient,(c,addr))
+    except KeyboardInterrupt:    
+        s.close()

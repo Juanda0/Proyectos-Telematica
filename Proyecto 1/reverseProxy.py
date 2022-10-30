@@ -67,5 +67,5 @@ if __name__ == "__main__":
             c, addr = s.accept()
             printLock.acquire()
             _thread.start_new_thread(newClient,(c,addr))
-    except:
+    except KeyboardInterrupt:
         s.close()
