@@ -21,7 +21,11 @@ def newClient(clientsocket,addr):
         res = """HTTP/1.1 200 OK
                 Content-Type: text/html
 
-                <html><body>PONG - Server ID:"""+str(ID)+"""</body></html>
+                <!DOCTYPE html><html lang='en'><head><title>Listening on server: """+str(ID)+"""</title></head><body><h3>Escuchando Servidor</h3><table style='border: 1px solid grey; border-collapse: collapse'><thead><th style='border: 1px solid grey; padding: 7px 4px'>Identificador</th><th style='border: 1px solid grey; padding: 7px 4px'>Respuesta</th></thead><tbody><tr><td style='border: 1px solid grey; padding: 7px 4px'>
+          """+str(ID)+"""</td><td style='border: 1px solid grey; padding: 7px 4px'>PONG</td></tr></tbody></table><table
+ style='margin-top: 60px;border: 1px solid grey;border-collapse: collapse;'><thead><th style='border: 1px solid grey; padding: 7px 4px'>Imagen 1</th><th style='border: 1px solid grey; padding: 7px 4px'>Imagen 2</th></thead><tbody><tr><td style='border: 1px solid grey; padding: 7px 4px'><img
+ id='img1' width='150px' src='https://anjanadata.com/wp-content/uploads/2020/11/prueba-de-concepto.jpg' alt='imagen1'/></td><td style='border: 1px solid grey; padding: 7px 4px'><img
+ id='img2' width='150px' src='https://talently.tech/blog/wp-content/uploads/2021/11/Prueba-Tecnica-1200x900.png' alt='imagen2'/></td></tr></tbody></table></body></html>
             """
         clientsocket.send(bytes(res, 'utf-8'))
     clientsocket.close()
