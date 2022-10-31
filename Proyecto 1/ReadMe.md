@@ -8,7 +8,7 @@ Este proyecto consta del desarrollo de un servidor que implementa un proxy inver
 ## II. Desarrollo
 
 ### Lenguaje
-El lenguaje escogido para el desarrollo del PIBL fue Python, esto debido a que -- inserte argumentos --. Asi mismo, los diferentes servidores web tambien fueron desarrollados en Python. 
+El lenguaje escogido para el desarrollo del PIBL fue Python, esto debido a que es un lenguaje multiparadigma, altamente compatible y con una gran variedad de librerías distribuida por su solida comunidad, lo cual garantiza una alta seguridad sobre lo que se está trabajando. Asi mismo, los diferentes servidores web tambien fueron desarrollados en Python. 
 
 ### Servidores
 Los servidores escogidos corren en Ubuntu - linux y se encuentran en la cloud AWS. En el archivo config.py se encuentra la pool de direcciones ip parametrizable para poner todas las direcciones de estos
@@ -26,7 +26,7 @@ Se implementó una estrategia de caching con el objetivo de evitar peticiones re
 El desarrollo de una infraestructura capaz de soportar peticiones concurrentes de decenas de personas puede ser algo demasiado complejo si se tratase de solucionar mediante una escalacion vertical. Caso contrario al escalamiento horizontal, que mediante el uso de intermediarios como el PIBL permite incluir diversas maquinas a la infraestructura, dando lugar a la gestion de estas y asi facilitando el acceso a miles de usuarios con un menor costo y mayor versatilidad, ademas de ser practicamente infinito[3].
 
 ## IV. Referencias
-[1] 
+[1] https://www.edoxitraining.com/studyhub-detail/advantages-of-python-over-other-programming-languages
 
 [2] https://www.ibm.com/docs/es/aix/7.1?topic=options-round-robin-distribution
 
